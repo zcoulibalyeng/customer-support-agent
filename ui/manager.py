@@ -13,19 +13,20 @@ Usage:
 
 import sys
 from pathlib import Path
+
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 import streamlit as st
+
 from src.utils.database import init_database
 from src.workflow.manager_actions import (
-    get_pending_refunds,
-    get_open_tickets,
-    get_recent_refunds,
-    get_dashboard_stats,
     approve_refund,
     deny_refund,
+    get_dashboard_stats,
+    get_open_tickets,
+    get_pending_refunds,
+    get_recent_refunds,
 )
-
 
 # ---------------------------------------------------------------------------
 # Page config
@@ -184,14 +185,16 @@ else:
     table_data = []
     for r in recent:
         status_icon = {"completed": "✅", "rejected": "❌", "pending": "⏳"}.get(r["status"], "❓")
-        table_data.append({
-            "ID": r["id"],
-            "Customer": r["customer_name"],
-            "Product": r["product"],
-            "Amount": f"${r['amount']:.2f}",
-            "Status": f"{status_icon} {r['status']}",
-            "Approved by": r["approved_by"] or "—",
-            "Date": r["created_at"][:16],
-        })
+        table_data.append(
+            {
+                "ID": r["id"],
+                "Customer": r["customer_name"],
+                "Product": r["product"],
+                "Amount": f"${r['amount']:.2f}",
+                "Status": f"{status_icon} {r['status']}",
+                "Approved by": r["approved_by"] or "—",
+                "Date": r["created_at"][:16],
+            }
+        )
 
-    st.dataframe(table_data, width='stretch', hide_index=True)
+    st.dataframe(table_data, width="stretch", hide_index=True)

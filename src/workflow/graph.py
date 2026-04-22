@@ -10,26 +10,24 @@ Key patterns:
 
 from __future__ import annotations
 
-from langgraph.graph import StateGraph, START, END
-from langgraph.prebuilt import ToolNode
-from langgraph.checkpoint.memory import MemorySaver
 from langchain_core.messages import AIMessage, HumanMessage
+from langgraph.checkpoint.memory import MemorySaver
+from langgraph.graph import END, START, StateGraph
+from langgraph.prebuilt import ToolNode
 
-from src.models import WorkflowState, Intent
 from src.agents import (
     classify_intent,
-    support_agent,
-    should_continue_or_respond,
-    evaluate_refund,
     escalate_to_human,
+    support_agent,
 )
 from src.guardrails.safety import detect_pii, detect_prompt_injection
+from src.models import Intent, WorkflowState
 from src.tools import ALL_TOOLS
-
 
 # ---------------------------------------------------------------------------
 # Safety check node
 # ---------------------------------------------------------------------------
+
 
 def safety_check(state: WorkflowState) -> WorkflowState:
     """
@@ -54,9 +52,9 @@ def safety_check(state: WorkflowState) -> WorkflowState:
     # Check for prompt injection
     injection_result = detect_prompt_injection(last_message)
     if injection_result["is_injection"]:
-        state.messages.append(AIMessage(
-            content="I'm here to help with your support needs. How can I assist you today?"
-        ))
+        state.messages.append(
+            AIMessage(content="I'm here to help with your support needs. How can I assist you today?")
+        )
         state.errors.append(f"Prompt injection attempt blocked: {injection_result['pattern']}")
         print(f"  [Safety] Prompt injection blocked: {injection_result['pattern']}")
 
@@ -66,6 +64,7 @@ def safety_check(state: WorkflowState) -> WorkflowState:
 # ---------------------------------------------------------------------------
 # Routing functions for conditional edges
 # ---------------------------------------------------------------------------
+
 
 def route_after_classification(state: WorkflowState) -> str:
     """After classification, route to escalation or the support agent."""
@@ -92,6 +91,7 @@ def route_after_agent(state: WorkflowState) -> str:
 # Response node (final step before END)
 # ---------------------------------------------------------------------------
 
+
 def respond(state: WorkflowState) -> WorkflowState:
     """Final node — marks the turn as complete."""
     state.is_resolved = True
@@ -101,6 +101,7 @@ def respond(state: WorkflowState) -> WorkflowState:
 # ---------------------------------------------------------------------------
 # Graph construction
 # ---------------------------------------------------------------------------
+
 
 def build_graph():
     """

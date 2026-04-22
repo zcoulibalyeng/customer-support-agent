@@ -6,7 +6,6 @@ These checks run on every incoming message before it reaches the agent.
 
 import re
 
-
 # Common PII patterns
 _SSN_PATTERN = re.compile(r"\b\d{3}-?\d{2}-?\d{4}\b")
 _CREDIT_CARD_PATTERN = re.compile(r"\b(?:\d{4}[-\s]?){3}\d{4}\b")

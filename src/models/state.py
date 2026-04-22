@@ -10,17 +10,18 @@ from __future__ import annotations
 from enum import Enum
 from typing import Annotated, Optional
 
-from pydantic import BaseModel, Field
-from langgraph.graph import add_messages
 from langchain_core.messages import BaseMessage
-
+from langgraph.graph import add_messages
+from pydantic import BaseModel, Field
 
 # ---------------------------------------------------------------------------
 # Enums
 # ---------------------------------------------------------------------------
 
+
 class Intent(str, Enum):
     """Customer intent categories."""
+
     ORDER_STATUS = "order_status"
     REFUND_REQUEST = "refund_request"
     TECHNICAL_SUPPORT = "technical_support"
@@ -41,8 +42,10 @@ class TicketPriority(str, Enum):
 # Structured output models (used with .with_structured_output())
 # ---------------------------------------------------------------------------
 
+
 class IntentClassification(BaseModel):
     """Output from the classifier agent."""
+
     intent: Intent = Field(description="The classified intent of the customer message")
     confidence: float = Field(description="Confidence score between 0 and 1")
     reasoning: str = Field(description="Brief explanation of why this intent was chosen")
@@ -51,6 +54,7 @@ class IntentClassification(BaseModel):
 
 class RefundDecision(BaseModel):
     """Output from the refund evaluation."""
+
     should_refund: bool = Field(description="Whether a refund should be issued")
     amount: float = Field(description="The refund amount in dollars")
     reason: str = Field(description="Explanation for the decision")
@@ -59,6 +63,7 @@ class RefundDecision(BaseModel):
 
 class EscalationDecision(BaseModel):
     """Output when the agent decides to escalate."""
+
     reason: str = Field(description="Why the agent cannot handle this")
     suggested_department: str = Field(description="Which team should handle this")
     context_summary: str = Field(description="Summary for the human agent")
@@ -67,6 +72,7 @@ class EscalationDecision(BaseModel):
 # ---------------------------------------------------------------------------
 # Graph state
 # ---------------------------------------------------------------------------
+
 
 class WorkflowState(BaseModel):
     """

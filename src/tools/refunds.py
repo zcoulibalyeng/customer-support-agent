@@ -10,8 +10,8 @@ from datetime import datetime
 
 from langchain_core.tools import tool
 
-from src.utils.database import get_connection
 from src.utils.config import MAX_AUTO_REFUND
+from src.utils.database import get_connection
 
 
 @tool
@@ -84,12 +84,7 @@ def process_refund(order_id: str, amount: float, reason: str) -> str:
     conn.commit()
     conn.close()
 
-    return (
-        f"Refund processed automatically!\n"
-        f"Refund ID: {refund_id}\n"
-        f"Amount: ${amount:.2f}\n"
-        f"Order: {order_id}"
-    )
+    return f"Refund processed automatically!\nRefund ID: {refund_id}\nAmount: ${amount:.2f}\nOrder: {order_id}"
 
 
 @tool

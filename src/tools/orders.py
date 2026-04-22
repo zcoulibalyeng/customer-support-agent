@@ -3,6 +3,7 @@ Order tools — look up orders, check status, get tracking info.
 """
 
 from langchain_core.tools import tool
+
 from src.utils.database import get_connection
 
 
@@ -51,9 +52,7 @@ def get_customer_orders(customer_id: str) -> str:
 
     lines = [f"Orders for customer {customer_id}:\n"]
     for row in rows:
-        lines.append(
-            f"  {row['id']} | {row['product']} | ${row['total']:.2f} | {row['status']} | {row['ordered_at']}"
-        )
+        lines.append(f"  {row['id']} | {row['product']} | ${row['total']:.2f} | {row['status']} | {row['ordered_at']}")
     return "\n".join(lines)
 
 

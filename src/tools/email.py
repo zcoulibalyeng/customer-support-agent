@@ -10,7 +10,7 @@ from email.mime.text import MIMEText
 
 from langchain_core.tools import tool
 
-from src.utils.config import SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, EMAIL_FROM
+from src.utils.config import EMAIL_FROM, SMTP_HOST, SMTP_PASS, SMTP_PORT, SMTP_USER
 
 
 @tool

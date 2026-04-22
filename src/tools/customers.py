@@ -6,6 +6,7 @@ through native function calling.
 """
 
 from langchain_core.tools import tool
+
 from src.utils.database import get_connection
 
 

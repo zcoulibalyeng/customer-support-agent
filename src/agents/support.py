@@ -9,13 +9,12 @@ Uses LangChain's native .bind_tools() for function calling
 and LangGraph's ToolNode for automatic tool execution.
 """
 
-from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_core.messages import AIMessage
+from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 
 from src.models import WorkflowState
-from src.utils.llm import get_llm
 from src.tools import ALL_TOOLS
-
+from src.utils.llm import get_llm
 
 SYSTEM_PROMPT = """\
 You are a helpful, professional customer support agent for TechGear — an online electronics retailer.
@@ -51,10 +50,12 @@ def support_agent(state: WorkflowState) -> WorkflowState:
     """
     llm = get_llm().bind_tools(ALL_TOOLS)
 
-    prompt = ChatPromptTemplate.from_messages([
-        ("system", SYSTEM_PROMPT),
-        MessagesPlaceholder(variable_name="messages"),
-    ])
+    prompt = ChatPromptTemplate.from_messages(
+        [
+            ("system", SYSTEM_PROMPT),
+            MessagesPlaceholder(variable_name="messages"),
+        ]
+    )
 
     chain = prompt | llm
 

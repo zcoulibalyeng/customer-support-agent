@@ -3,11 +3,12 @@ End-to-end workflow test — runs full conversations through the graph.
 """
 
 from dotenv import load_dotenv
-load_dotenv()
 
-from src.workflow.runner import send_message, create_session
-from src.utils.database import init_database
 from src.tools.knowledge import init_knowledge_base
+from src.utils.database import init_database
+from src.workflow.runner import create_session, send_message
+
+load_dotenv()
 
 
 def test_order_inquiry():
@@ -24,7 +25,7 @@ def test_order_inquiry():
 
     assert response, "Agent should produce a response"
     assert len(response) > 20, "Response should be substantive"
-    print(f"  ✅ Order inquiry handled")
+    print("  ✅ Order inquiry handled")
     print(f"  Response preview: {response[:150]}...")
 
 
@@ -40,7 +41,7 @@ def test_troubleshooting():
     )
 
     assert response, "Agent should produce a response"
-    print(f"  ✅ Troubleshooting handled")
+    print("  ✅ Troubleshooting handled")
     print(f"  Response preview: {response[:150]}...")
 
 
@@ -59,7 +60,7 @@ def test_multi_turn_conversation():
     assert r2, "Second response should exist"
     print(f"  Turn 2: {r2[:80]}...")
 
-    print(f"  ✅ Multi-turn conversation works with memory")
+    print("  ✅ Multi-turn conversation works with memory")
 
 
 if __name__ == "__main__":
@@ -69,4 +70,4 @@ if __name__ == "__main__":
     test_order_inquiry()
     test_troubleshooting()
     test_multi_turn_conversation()
-    print(f"\n  ✅ All workflow tests passed")
+    print("\n  ✅ All workflow tests passed")

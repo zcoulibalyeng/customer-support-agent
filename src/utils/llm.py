@@ -6,7 +6,7 @@ Every agent and tool imports from here — never instantiates its own client.
 
 from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 
-from src.utils.config import OPENAI_API_KEY, LLM_MODEL, LLM_TEMPERATURE, EMBEDDING_MODEL
+from src.utils.config import EMBEDDING_MODEL, LLM_MODEL, LLM_TEMPERATURE, OPENAI_API_KEY
 
 
 def get_llm(temperature: float | None = None) -> ChatOpenAI:

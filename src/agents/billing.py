@@ -6,10 +6,8 @@ prepares the refund proposal and triggers a LangGraph interrupt
 to pause for human review.
 """
 
-from langchain_core.messages import AIMessage
-
-from src.models import WorkflowState
 from src.guardrails.permissions import check_refund_permission
+from src.models import WorkflowState
 
 
 def evaluate_refund(state: WorkflowState) -> WorkflowState:

@@ -6,12 +6,11 @@ a typed classification result. This feeds into the graph's
 conditional edges for routing to the correct handler.
 """
 
-from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.messages import HumanMessage
+from langchain_core.prompts import ChatPromptTemplate
 
-from src.models import WorkflowState, IntentClassification
+from src.models import IntentClassification, WorkflowState
 from src.utils.llm import get_llm
-
 
 SYSTEM_PROMPT = """\
 You are a customer support intent classifier.
@@ -43,10 +42,15 @@ def classify_intent(state: WorkflowState) -> WorkflowState:
     """
     llm = get_llm().with_structured_output(IntentClassification)
 
-    chain = ChatPromptTemplate.from_messages([
-        ("system", SYSTEM_PROMPT),
-        ("human", "{message}"),
-    ]) | llm
+    chain = (
+        ChatPromptTemplate.from_messages(
+            [
+                ("system", SYSTEM_PROMPT),
+                ("human", "{message}"),
+            ]
+        )
+        | llm
+    )
 
     # Get the last human message
     last_message = ""
@@ -61,7 +65,9 @@ def classify_intent(state: WorkflowState) -> WorkflowState:
     state.priority = result.priority
     state.confidence = result.confidence
 
-    print(f"  [Classifier] Intent: {result.intent.value} | Priority: {result.priority.value} | Confidence: {result.confidence:.2f}")
+    print(
+        f"  [Classifier] Intent: {result.intent.value} | Priority: {result.priority.value} | Confidence: {result.confidence:.2f}"
+    )
     print(f"  [Classifier] Reasoning: {result.reasoning}")
 
     return state

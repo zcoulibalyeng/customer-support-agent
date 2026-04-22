@@ -10,12 +10,11 @@ from __future__ import annotations
 
 import uuid
 
-from langchain_core.messages import HumanMessage, AIMessage
+from langchain_core.messages import AIMessage, HumanMessage
 
-from src.models import WorkflowState
-from src.workflow.graph import get_graph
-from src.utils.database import init_database
 from src.tools.knowledge import init_knowledge_base
+from src.utils.database import init_database
+from src.workflow.graph import get_graph
 
 
 def _ensure_initialised():

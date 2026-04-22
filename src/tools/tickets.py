@@ -40,11 +40,13 @@ def update_ticket(ticket_id: str, message: str) -> str:
         return f"No ticket found with ID: {ticket_id}"
 
     messages = json.loads(row["messages"])
-    messages.append({
-        "timestamp": datetime.utcnow().isoformat(),
-        "content": message,
-        "from": "agent",
-    })
+    messages.append(
+        {
+            "timestamp": datetime.utcnow().isoformat(),
+            "content": message,
+            "from": "agent",
+        }
+    )
 
     conn.execute(
         "UPDATE tickets SET messages = ?, updated_at = ? WHERE id = ?",
@@ -91,7 +93,5 @@ def get_customer_tickets(customer_id: str) -> str:
 
     lines = [f"Tickets for customer {customer_id}:\n"]
     for row in rows:
-        lines.append(
-            f"  {row['id']} | {row['subject']} | {row['status']} | {row['priority']} | {row['created_at']}"
-        )
+        lines.append(f"  {row['id']} | {row['subject']} | {row['status']} | {row['priority']} | {row['created_at']}")
     return "\n".join(lines)

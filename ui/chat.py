@@ -4,15 +4,17 @@ Streamlit chat UI for the TechGear Customer Support Agent.
 Usage:
     streamlit run ui/chat.py
 """
+
 import sys
 from pathlib import Path
+
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 import streamlit as st
-from src.workflow.runner import send_message, create_session
-from src.utils.database import init_database
-from src.tools.knowledge import init_knowledge_base
 
+from src.tools.knowledge import init_knowledge_base
+from src.utils.database import init_database
+from src.workflow.runner import create_session, send_message
 
 # ---------------------------------------------------------------------------
 # Initialisation

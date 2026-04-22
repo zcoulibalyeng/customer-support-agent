@@ -9,13 +9,12 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from langchain_core.tools import tool
 from langchain_community.vectorstores import FAISS
 from langchain_core.documents import Document
+from langchain_core.tools import tool
 
-from src.utils.llm import get_embeddings
 from src.utils.config import KNOWLEDGE_DIR, VECTORSTORE_DIR
-
+from src.utils.llm import get_embeddings
 
 _vectorstore: FAISS | None = None
 
@@ -30,10 +29,12 @@ def _load_articles() -> list[Document]:
 
     for md_file in knowledge_path.glob("*.md"):
         content = md_file.read_text(encoding="utf-8")
-        docs.append(Document(
-            page_content=content,
-            metadata={"source": md_file.name},
-        ))
+        docs.append(
+            Document(
+                page_content=content,
+                metadata={"source": md_file.name},
+            )
+        )
 
     return docs
 

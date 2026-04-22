@@ -7,7 +7,8 @@ Usage:
 """
 
 import argparse
-from src.workflow.runner import run_interactive, send_message, create_session
+
+from src.workflow.runner import create_session, run_interactive, send_message
 
 
 def main():

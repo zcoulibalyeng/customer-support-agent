@@ -13,13 +13,9 @@ the manager's decision back to the automated workflow.
 
 from __future__ import annotations
 
-import sqlite3
-from datetime import datetime
-
-from src.utils.database import get_connection
 from src.tools.email import send_email
-from src.tools.tickets import update_ticket, close_ticket
-from src.tools.refunds import process_refund
+from src.tools.tickets import close_ticket, update_ticket
+from src.utils.database import get_connection
 
 
 def get_pending_refunds() -> list[dict]:
@@ -86,17 +82,13 @@ def get_dashboard_stats() -> dict:
         "SELECT COUNT(*) as count, COALESCE(SUM(amount), 0) as total FROM refunds WHERE status = 'pending'"
     ).fetchone()
 
-    open_tickets = conn.execute(
-        "SELECT COUNT(*) as count FROM tickets WHERE status = 'open'"
-    ).fetchone()
+    open_tickets = conn.execute("SELECT COUNT(*) as count FROM tickets WHERE status = 'open'").fetchone()
 
     completed_refunds = conn.execute(
         "SELECT COUNT(*) as count, COALESCE(SUM(amount), 0) as total FROM refunds WHERE status = 'completed'"
     ).fetchone()
 
-    resolved_tickets = conn.execute(
-        "SELECT COUNT(*) as count FROM tickets WHERE status = 'resolved'"
-    ).fetchone()
+    resolved_tickets = conn.execute("SELECT COUNT(*) as count FROM tickets WHERE status = 'resolved'").fetchone()
 
     conn.close()
 
@@ -139,7 +131,7 @@ def approve_refund(refund_id: str, manager_name: str = "Manager") -> str:
         return f"Refund {refund_id} is already {refund['status']}"
 
     # 1. Update refund record
-    now = datetime.utcnow().isoformat()
+    # now = datetime.utcnow().isoformat()
     conn.execute(
         "UPDATE refunds SET status = 'completed', approved_by = ? WHERE id = ?",
         (manager_name, refund_id),
@@ -148,18 +140,20 @@ def approve_refund(refund_id: str, manager_name: str = "Manager") -> str:
     conn.close()
 
     # 2. Send confirmation email to customer
-    send_email.invoke({
-        "to": refund["customer_email"],
-        "subject": f"Refund Approved — ${refund['amount']:.2f} for {refund['product']}",
-        "body": (
-            f"Hi {refund['customer_name']},\n\n"
-            f"Your refund of ${refund['amount']:.2f} for {refund['product']} "
-            f"(Order: {refund['order_id']}) has been approved and processed.\n\n"
-            f"The refund will appear on your original payment method within 3-5 business days.\n\n"
-            f"Thank you for your patience.\n"
-            f"— TechGear Support"
-        ),
-    })
+    send_email.invoke(
+        {
+            "to": refund["customer_email"],
+            "subject": f"Refund Approved — ${refund['amount']:.2f} for {refund['product']}",
+            "body": (
+                f"Hi {refund['customer_name']},\n\n"
+                f"Your refund of ${refund['amount']:.2f} for {refund['product']} "
+                f"(Order: {refund['order_id']}) has been approved and processed.\n\n"
+                f"The refund will appear on your original payment method within 3-5 business days.\n\n"
+                f"Thank you for your patience.\n"
+                f"— TechGear Support"
+            ),
+        }
+    )
 
     # 3. Find and close related ticket
     conn = get_connection()
@@ -170,14 +164,18 @@ def approve_refund(refund_id: str, manager_name: str = "Manager") -> str:
     conn.close()
 
     if ticket:
-        update_ticket.invoke({
-            "ticket_id": ticket["id"],
-            "message": f"Refund {refund_id} approved by {manager_name}. Amount: ${refund['amount']:.2f}",
-        })
-        close_ticket.invoke({
-            "ticket_id": ticket["id"],
-            "resolution": f"Refund of ${refund['amount']:.2f} approved and processed",
-        })
+        update_ticket.invoke(
+            {
+                "ticket_id": ticket["id"],
+                "message": f"Refund {refund_id} approved by {manager_name}. Amount: ${refund['amount']:.2f}",
+            }
+        )
+        close_ticket.invoke(
+            {
+                "ticket_id": ticket["id"],
+                "resolution": f"Refund of ${refund['amount']:.2f} approved and processed",
+            }
+        )
 
     return f"Refund {refund_id} approved. ${refund['amount']:.2f} refunded to {refund['customer_name']}. Email sent."
 
@@ -217,19 +215,21 @@ def deny_refund(refund_id: str, reason: str, manager_name: str = "Manager") -> s
     conn.close()
 
     # 2. Email the customer
-    send_email.invoke({
-        "to": refund["customer_email"],
-        "subject": f"Refund Update — {refund['product']}",
-        "body": (
-            f"Hi {refund['customer_name']},\n\n"
-            f"After review, we were unable to approve the refund of ${refund['amount']:.2f} "
-            f"for {refund['product']} (Order: {refund['order_id']}).\n\n"
-            f"Reason: {reason}\n\n"
-            f"If you have questions about this decision, please reply to this email "
-            f"or contact our support team.\n\n"
-            f"— TechGear Support"
-        ),
-    })
+    send_email.invoke(
+        {
+            "to": refund["customer_email"],
+            "subject": f"Refund Update — {refund['product']}",
+            "body": (
+                f"Hi {refund['customer_name']},\n\n"
+                f"After review, we were unable to approve the refund of ${refund['amount']:.2f} "
+                f"for {refund['product']} (Order: {refund['order_id']}).\n\n"
+                f"Reason: {reason}\n\n"
+                f"If you have questions about this decision, please reply to this email "
+                f"or contact our support team.\n\n"
+                f"— TechGear Support"
+            ),
+        }
+    )
 
     # 3. Update related ticket
     conn = get_connection()
@@ -240,9 +240,11 @@ def deny_refund(refund_id: str, reason: str, manager_name: str = "Manager") -> s
     conn.close()
 
     if ticket:
-        update_ticket.invoke({
-            "ticket_id": ticket["id"],
-            "message": f"Refund {refund_id} denied by {manager_name}. Reason: {reason}",
-        })
+        update_ticket.invoke(
+            {
+                "ticket_id": ticket["id"],
+                "message": f"Refund {refund_id} denied by {manager_name}. Reason: {reason}",
+            }
+        )
 
     return f"Refund {refund_id} denied. Customer {refund['customer_name']} notified via email."

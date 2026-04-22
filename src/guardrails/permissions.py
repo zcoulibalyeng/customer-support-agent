@@ -27,8 +27,7 @@ def check_refund_permission(amount: float) -> dict:
     return {
         "allowed": False,
         "reason": (
-            f"Amount ${amount:.2f} exceeds auto-approval limit (${MAX_AUTO_REFUND:.2f}). "
-            f"Human approval required."
+            f"Amount ${amount:.2f} exceeds auto-approval limit (${MAX_AUTO_REFUND:.2f}). Human approval required."
         ),
     }
 

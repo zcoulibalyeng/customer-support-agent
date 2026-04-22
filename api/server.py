@@ -13,13 +13,12 @@ from __future__ import annotations
 
 from typing import Optional
 
-from fastapi import FastAPI, WebSocket, WebSocketDisconnect
+from fastapi import FastAPI
 from pydantic import BaseModel, Field
 
-from src.workflow.runner import send_message, create_session
-from src.utils.database import init_database
 from src.tools.knowledge import init_knowledge_base
-
+from src.utils.database import init_database
+from src.workflow.runner import create_session, send_message
 
 app = FastAPI(
     title="TechGear Customer Support Agent API",
@@ -37,6 +36,7 @@ async def startup():
 # ---------------------------------------------------------------------------
 # Models
 # ---------------------------------------------------------------------------
+
 
 class ChatRequest(BaseModel):
     message: str = Field(description="Customer message")
@@ -56,6 +56,7 @@ class SessionResponse(BaseModel):
 # ---------------------------------------------------------------------------
 # REST endpoints
 # ---------------------------------------------------------------------------
+
 
 @app.get("/health")
 async def health():
@@ -77,5 +78,3 @@ async def chat(request: ChatRequest):
         customer_email=request.customer_email,
     )
     return ChatResponse(response=response, thread_id=request.thread_id)
-
-

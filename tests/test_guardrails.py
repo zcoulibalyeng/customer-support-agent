@@ -2,8 +2,8 @@
 Tests for guardrails — PII detection, prompt injection, permissions.
 """
 
+from src.guardrails.permissions import check_action_permission, check_refund_permission
 from src.guardrails.safety import detect_pii, detect_prompt_injection
-from src.guardrails.permissions import check_refund_permission, check_action_permission
 
 
 def test_pii_detection():
@@ -76,4 +76,4 @@ if __name__ == "__main__":
     test_prompt_injection()
     test_refund_permissions()
     test_action_permissions()
-    print(f"\n  ✅ All guardrail tests passed")
+    print("\n  ✅ All guardrail tests passed")

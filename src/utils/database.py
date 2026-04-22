@@ -10,7 +10,6 @@ from datetime import datetime, timedelta
 
 from src.utils.config import DB_PATH
 
-
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS customers (
     id TEXT PRIMARY KEY,
@@ -75,14 +74,84 @@ def _seed_orders(cursor: sqlite3.Cursor) -> None:
     """Generate realistic orders for each customer."""
     now = datetime.utcnow()
     orders = [
-        ("ORD-1001", "C001", "Wireless Headphones Pro", 1, 149.99, "delivered", "TRK-WH-99281", (now - timedelta(days=10)).isoformat(), (now - timedelta(days=3)).isoformat()),
-        ("ORD-1002", "C001", "USB-C Charging Cable", 3, 29.97, "delivered", "TRK-UC-44821", (now - timedelta(days=30)).isoformat(), (now - timedelta(days=25)).isoformat()),
-        ("ORD-1003", "C002", "Smart Watch Basic", 1, 199.99, "shipped", "TRK-SW-12093", (now - timedelta(days=2)).isoformat(), None),
+        (
+            "ORD-1001",
+            "C001",
+            "Wireless Headphones Pro",
+            1,
+            149.99,
+            "delivered",
+            "TRK-WH-99281",
+            (now - timedelta(days=10)).isoformat(),
+            (now - timedelta(days=3)).isoformat(),
+        ),
+        (
+            "ORD-1002",
+            "C001",
+            "USB-C Charging Cable",
+            3,
+            29.97,
+            "delivered",
+            "TRK-UC-44821",
+            (now - timedelta(days=30)).isoformat(),
+            (now - timedelta(days=25)).isoformat(),
+        ),
+        (
+            "ORD-1003",
+            "C002",
+            "Smart Watch Basic",
+            1,
+            199.99,
+            "shipped",
+            "TRK-SW-12093",
+            (now - timedelta(days=2)).isoformat(),
+            None,
+        ),
         ("ORD-1004", "C002", "Phone Case", 1, 24.99, "processing", None, (now - timedelta(hours=6)).isoformat(), None),
-        ("ORD-1005", "C003", "Laptop Stand Deluxe", 2, 159.98, "delivered", "TRK-LS-77342", (now - timedelta(days=15)).isoformat(), (now - timedelta(days=8)).isoformat()),
-        ("ORD-1006", "C004", "Bluetooth Speaker", 1, 79.99, "cancelled", None, (now - timedelta(days=5)).isoformat(), None),
-        ("ORD-1007", "C005", "Mechanical Keyboard", 1, 129.99, "delivered", "TRK-MK-55109", (now - timedelta(days=20)).isoformat(), (now - timedelta(days=14)).isoformat()),
-        ("ORD-1008", "C005", "Monitor Arm", 1, 89.99, "shipped", "TRK-MA-33201", (now - timedelta(days=1)).isoformat(), None),
+        (
+            "ORD-1005",
+            "C003",
+            "Laptop Stand Deluxe",
+            2,
+            159.98,
+            "delivered",
+            "TRK-LS-77342",
+            (now - timedelta(days=15)).isoformat(),
+            (now - timedelta(days=8)).isoformat(),
+        ),
+        (
+            "ORD-1006",
+            "C004",
+            "Bluetooth Speaker",
+            1,
+            79.99,
+            "cancelled",
+            None,
+            (now - timedelta(days=5)).isoformat(),
+            None,
+        ),
+        (
+            "ORD-1007",
+            "C005",
+            "Mechanical Keyboard",
+            1,
+            129.99,
+            "delivered",
+            "TRK-MK-55109",
+            (now - timedelta(days=20)).isoformat(),
+            (now - timedelta(days=14)).isoformat(),
+        ),
+        (
+            "ORD-1008",
+            "C005",
+            "Monitor Arm",
+            1,
+            89.99,
+            "shipped",
+            "TRK-MA-33201",
+            (now - timedelta(days=1)).isoformat(),
+            None,
+        ),
     ]
     cursor.executemany(
         "INSERT OR IGNORE INTO orders (id, customer_id, product, quantity, total, status, tracking_number, ordered_at, delivered_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
