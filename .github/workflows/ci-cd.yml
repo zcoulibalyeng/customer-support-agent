@@ -109,7 +109,7 @@ jobs:
             customer-support-agent
           sleep 10
           curl -f http://localhost:8000/health || exit 1
-          docker stop test-api
+          docker stop test-agent
 
       - name: Verify Manager UI starts
         run: |
