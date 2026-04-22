@@ -1,0 +1,23 @@
+.env
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+venv/
+.venv/
+.idea/
+.vscode/
+.DS_Store
+
+docs/
+
+# Database (generated at runtime)
+data/support.db
+
+# Vector store index (generated at runtime)
+data/vectorstore/*.faiss
+data/vectorstore/*.pkl
+
+# Outputs
+output/

@@ -1,0 +1,29 @@
+# Core
+langchain>=0.3.0
+langchain-openai>=0.2.0
+langchain-community>=0.3.0
+langgraph>=0.2.0
+langchain-core>=0.3.0
+
+# LLM
+openai>=1.50.0
+
+# Vector store
+faiss-cpu>=1.8.0
+
+# Data
+pydantic>=2.0.0
+
+# API
+fastapi>=0.115.0
+uvicorn[standard]>=0.32.0
+websockets>=12.0
+
+# UI
+streamlit>=1.38.0
+
+# Config
+python-dotenv>=1.0.0
+
+# Dev / CI
+ruff>=0.7.0
