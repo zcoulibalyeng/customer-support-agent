@@ -104,7 +104,7 @@ jobs:
       - name: Verify API starts
         run: |
           docker run --rm -d --name test-agent \
-            -e OPENAI_API_KEY=test \
+            -e OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }} \
             -p 8000:8000 \
             customer-support-agent
           sleep 10
